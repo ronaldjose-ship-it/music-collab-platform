@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Symphony</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="browse.html" class="logo">
+                <i class="ph-fill ph-music-notes-simple"></i>
+                <span class="logo-text">Symphony</span>
+            </a>
+            <div class="nav-links">
+                <a href="browse.html">Browse</a>
+                <a href="upload.html">Upload</a>
+                <a href="favourites.html" id="navFavouritesLink" style="display:none;">Favourites</a>
+                <a href="profile.html" id="navProfileLink" style="display:none;" class="active">My Profile</a>
+                <a href="studios.html" id="navStudiosLink" style="display:none;">Studios</a>
+                <a href="chat.html" id="navChatLink" style="display:none;">Messages</a>
+                <a href="index.html" id="navAuthLink">Login</a>
+                <a href="#" id="navLogoutLink" style="display:none; color:var(--accent-color);">Logout</a>
+            </div>
+            <button class="menu-toggle"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="profile-header">
+            <img src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=300&auto=format&fit=crop" alt="Artist Profile" class="profile-avatar" id="profileImage">
+            <div class="profile-info">
+                <h1 id="profileName">Loading...</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 12px; font-size: 1.1rem;" id="profileRole">Music Producer | Electronic & Hip Hop</p>
+                
+                <div style="display:flex; align-items:center; gap: 24px; margin-bottom: 16px; flex-wrap:wrap;">
+                    <div class="rating-display">
+                        <i class="ph-fill ph-star"></i>
+                        <span id="ratingAvg">4.8</span>
+                        <span class="rating-count" id="ratingCount">(124 reviews)</span>
+                    </div>
+                    <div class="follower-display" style="display:flex; align-items:center; gap:6px; color:var(--text-primary); font-size:0.95rem;">
+                        <i class="ph-fill ph-users"></i>
+                        <span id="followerCountDisplay">0 followers</span>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-primary" id="messageBtn" style="display:none; padding: 8px 16px; font-size:0.9rem; width:auto;">
+                            <i class="ph ph-chat-circle-text"></i> Message
+                        </button>
+                        <button class="btn-secondary" id="followBtn" style="display:none; padding: 8px 16px; font-size:0.9rem; width:auto; background:rgba(255,255,255,0.05);">
+                            <i class="ph ph-user-plus"></i> <span id="followBtnText">Follow</span>
+                        </button>
+                        <button class="btn-primary" id="editProfileBtn" style="display:none; padding: 8px 16px; font-size:0.9rem; width:auto; background:var(--surface-light); color:var(--text-primary);">
+                            <i class="ph ph-pencil-simple"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div id="editProfileModal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; display:flex; justify-content:center; align-items:center;">
+            <div class="card glass" style="width:100%; max-width:500px; padding:32px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:24px;">
+                    <h3>Edit Profile</h3>
+                    <button id="closeEditModal" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;"><i class="ph ph-x"></i></button>
+                </div>
+                <form id="editProfileForm">
+                    <div class="form-group" style="text-align:center;">
+                        <img id="editImagePreview" src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=300&auto=format&fit=crop" style="width:100px; height:100px; border-radius:50%; object-fit:cover; margin-bottom:12px;">
+                        <input type="file" id="profileImageUpload" accept="image/*" style="display:block; margin:0 auto;">
+                    </div>
+                    <div class="form-group">
+                        <label>Role / Title</label>
+                        <input type="text" id="editRole" class="glass-input" placeholder="e.g. Music Producer">
+                    </div>
+                    <div class="form-group">
+                        <label>About Artist</label>
+                        <textarea id="editBio" class="glass-textarea" placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Expertise (comma separated)</label>
+                        <input type="text" id="editExpertise" class="glass-input" placeholder="Electronic, Mixing, Synths">
+                    </div>
+                    <div id="editStatus" style="color:var(--primary-color); text-align:center; margin-bottom:16px; display:none;">Saving...</div>
+                    <button type="submit" class="btn-primary" id="saveProfileBtn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 32px;">
+            <div class="profile-portfolio">
+                <h3 style="margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">Portfolio & Tracks</h3>
+                <div class="tracks-grid" id="profileTracksContainer">
+                    <!-- Profile tracks injected via JS -->
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>Loading portfolio...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-sidebar">
+                <div class="card glass" style="background: var(--glass-bg); margin-bottom: 24px;">
+                    <h4 style="margin-bottom: 16px;">About Artist</h4>
+                    <p style="color:var(--text-secondary); font-size:0.95rem; margin-bottom:16px;" id="profileBio">Passionate electronic producer trying to bend the rules of sound. Looking for vocalists to collaborate on full compositions.</p>
+                    
+                    <h4 style="margin-bottom: 12px;">Expertise</h4>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;" id="profileExpertise">
+                        <!-- Expertise injected via JS -->
+                        <span class="badge" style="background:rgba(99,102,241,0.2); color:#a5b4fc;">Electronic</span>
+                    </div>
+                </div>
+                
+                <div class="card glass" style="background: var(--glass-bg);">
+                    <h4 style="margin-bottom: 16px;">Leave a Rating</h4>
+                    <div style="display:flex; gap:8px; font-size:1.8rem; color:#475569; margin-bottom:16px; cursor:pointer;" id="interactiveRating">
+                        <i class="ph-fill ph-star rate-star" data-val="1"></i>
+                        <i class="ph-fill ph-star rate-star" data-val="2"></i>
+                        <i class="ph-fill ph-star rate-star" data-val="3"></i>
+                        <i class="ph-fill ph-star rate-star" data-val="4"></i>
+                        <i class="ph-fill ph-star rate-star" data-val="5"></i>
+                    </div>
+                    <button class="btn-primary" style="padding:8px 16px; width:100%;" id="submitRatingBtn">Submit Rating</button>
+                    <div id="ratingFeedback" style="display:none; color:var(--success); font-size:0.85rem; margin-top:8px; text-align:center;">Thank you for your feedback!</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/profile.js"></script>
+</body>
+</html>

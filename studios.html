@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Studios - Symphony</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .studio-tab {
+            padding: 8px 16px; margin-right: 8px; cursor: pointer; color: var(--text-secondary);
+            border-bottom: 2px solid transparent; transition: 0.2s;
+        }
+        .studio-tab.active {
+            color: var(--primary-color); border-bottom-color: var(--primary-color); font-weight: 600;
+        }
+        .file-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; margin-bottom: 8px;
+        }
+        .file-item:hover { background: rgba(255,255,255,0.06); }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); z-index: 1000; display: none;
+            justify-content: center; align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="browse.html" class="logo">
+                <i class="ph-fill ph-music-notes-simple"></i>
+                <span class="logo-text">Symphony</span>
+            </a>
+            <div class="nav-links">
+                <a href="browse.html">Browse</a>
+                <a href="upload.html">Upload</a>
+                <a href="favourites.html" id="navFavouritesLink" style="display:none;">Favourites</a>
+                <a href="profile.html" id="navProfileLink" style="display:none;">My Profile</a>
+                <a href="studios.html" class="active" id="navStudiosLink" style="display:none;">Studios</a>
+                <a href="chat.html" id="navChatLink" style="display:none;">Messages</a>
+                <a href="index.html" id="navAuthLink">Login</a>
+                <a href="#" id="navLogoutLink" style="display:none; color:var(--accent-color);">Logout</a>
+            </div>
+            <button class="menu-toggle"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content" style="max-width: 1400px; height: calc(100vh - 80px); padding-top: 10px;">
+        <div class="chat-layout" style="height: 100%;">
+            <!-- Left Sidebar -->
+            <div class="chat-sidebar card glass" style="display:flex; flex-direction:column; height: 100%;">
+                <div style="padding: 16px; border-bottom: 1px solid var(--border-color);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h3>My Studios</h3>
+                        <button class="btn-primary" id="openCreateStudioBtn" style="padding: 4px 12px; font-size:0.8rem; width: auto;"><i class="ph ph-plus"></i> New</button>
+                    </div>
+                </div>
+                <div class="contacts-list" id="studiosList" style="overflow-y:auto; flex-grow:1;">
+                    <div style="padding:16px; color:var(--text-secondary);">Loading studios...</div>
+                </div>
+            </div>
+            
+            <!-- Main Area -->
+            <div class="chat-main card glass" style="display:flex; flex-direction:column; height: 100%;">
+                <!-- Dynamic Content Will Be Injected Here -->
+                <div id="studioPlaceholder" style="flex-grow:1; display:flex; justify-content:center; align-items:center; color:var(--text-secondary);">
+                    Select or create a studio to start collaborating.
+                </div>
+                
+                <div id="studioContent" style="display:none; flex-direction:column; height:100%;">
+                    <!-- Header -->
+                    <div style="padding: 16px 24px; border-bottom: 1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <h3 id="activeStudioName">Studio Name</h3>
+                            <p id="activeStudioMembers" style="font-size:0.8rem; color:var(--text-secondary);">0 members</p>
+                        </div>
+                        <button class="btn-secondary" id="inviteBtn" style="width:auto; padding:8px 16px;"><i class="ph ph-user-plus"></i> Invite</button>
+                    </div>
+                    
+                    <!-- Tabs -->
+                    <div style="display:flex; padding: 0 16px; border-bottom: 1px solid var(--border-color);">
+                        <div class="studio-tab active" data-tab="chat">Chat & Discussion</div>
+                        <div class="studio-tab" data-tab="files">Shared Files & Tracks</div>
+                    </div>
+
+                    <!-- Chat Tab -->
+                    <div id="tabContent-chat" style="flex-grow:1; display:flex; flex-direction:column; overflow:hidden;">
+                        <div class="chat-messages" id="studioMessages" style="flex-grow:1; display:flex; flex-direction:column; gap:16px; padding:16px; overflow-y:auto;">
+                            <!-- Messages -->
+                        </div>
+                        <div class="chat-input-area" style="padding:16px; border-top:1px solid var(--border-color); display:flex; gap:8px;">
+                            <input type="text" id="studioMessageInput" class="glass-input" placeholder="Type a message..." style="flex-grow:1;">
+                            <button class="btn-primary" id="studioSendBtn" style="width:46px; height:46px; border-radius:50%; display:flex; justify-content:center; align-items:center;">
+                                <i class="ph-fill ph-paper-plane-tilt" style="font-size:1.2rem;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Files Tab -->
+                    <div id="tabContent-files" style="display:none; flex-grow:1; flex-direction:column; padding:16px; overflow-y:auto; gap:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 16px;">
+                            <h4>Uploaded Files</h4>
+                            <button class="btn-primary" id="uploadFileBtn" style="width:auto; padding:8px 16px;" onclick="document.getElementById('studioFileInput').click()"><i class="ph ph-upload-simple"></i> Upload</button>
+                            <input type="file" id="studioFileInput" style="display:none;">
+                        </div>
+                        <div id="fileUploadStatus" style="color:var(--primary-color); display:none; margin-bottom:8px; font-size:0.9rem;">Uploading...</div>
+                        <div id="studioFilesList" style="display:flex; flex-direction:column;">
+                            <!-- Files list -->
+                            <div style="color:var(--text-secondary); text-align:center; padding:20px;">No files shared yet.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Studio Modal -->
+    <div class="modal-overlay" id="createStudioModal">
+        <div class="card glass" style="width: 400px; padding: 24px;">
+            <h3 style="margin-bottom: 16px;">Create New Studio</h3>
+            <div class="form-group">
+                <label>Studio Name</label>
+                <input type="text" id="newStudioName" class="glass-input" placeholder="e.g. Summer EP Collab">
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:24px;">
+                <button class="btn-secondary" id="closeCreateModal" style="width:auto; padding:8px 16px;">Cancel</button>
+                <button class="btn-primary" id="submitCreateStudio" style="width:auto; padding:8px 16px;">Create Room</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invite Musicians Modal -->
+    <div class="modal-overlay" id="inviteModal">
+        <div class="card glass" style="width: 450px; padding: 24px; max-height: 80vh; display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 16px;">Invite Musicians</h3>
+            <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:12px;">Search for users to invite to this studio.</p>
+            
+            <input type="text" id="userSearchInput" class="glass-input" placeholder="Search by name..." style="margin-bottom:16px;">
+            <div id="userSearchResults" style="flex-grow:1; overflow-y:auto; border: 1px solid var(--border-color); border-radius:8px; padding:8px; min-height:150px;">
+                <!-- User result cards -->
+                <div style="color:var(--text-secondary); text-align:center; padding:20px;">Type to search</div>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-top:24px;">
+                <button class="btn-secondary" id="closeInviteModal" style="width:auto; padding:8px 16px;">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/studios.js"></script>
+</body>
+</html>

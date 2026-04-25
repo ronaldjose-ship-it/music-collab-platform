@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload - Symphony</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <a href="browse.html" class="logo">
+                <i class="ph-fill ph-music-notes-simple"></i>
+                <span class="logo-text">Symphony</span>
+            </a>
+            <div class="nav-links">
+                <a href="browse.html">Browse</a>
+                <a href="upload.html" class="active">Upload</a>
+                <a href="favourites.html" id="navFavouritesLink" style="display:none;">Favourites</a>
+                <a href="profile.html" id="navProfileLink" style="display:none;">My Profile</a>
+                <a href="studios.html" id="navStudiosLink" style="display:none;">Studios</a>
+                <a href="chat.html" id="navChatLink" style="display:none;">Messages</a>
+                <a href="index.html" id="navAuthLink">Login</a>
+                <a href="#" id="navLogoutLink" style="display:none; color:var(--accent-color);">Logout</a>
+            </div>
+            <button class="menu-toggle"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="upload-container card glass">
+            <h2 style="margin-bottom: 8px;">Upload Track</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 32px;">Share your latest creation with the Symphony community.</p>
+            
+            <form id="uploadForm">
+                <div class="upload-area" id="dropZone">
+                    <i class="ph ph-cloud-arrow-up"></i>
+                    <h3 style="margin-bottom: 8px;">Drag & Drop your audio file</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">MP3 or WAV, max 20MB</p>
+                    <input type="file" id="audioFile" accept="audio/mp3, audio/wav, audio/mpeg" style="display: none;">
+                </div>
+                <div id="fileInfo" style="display: none; margin-bottom: 24px; padding: 12px; background: var(--surface-light); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="ph-fill ph-file-audio" style="font-size: 1.5rem; color: var(--primary-color);"></i>
+                        <span id="fileName">No file selected</span>
+                    </div>
+                    <button type="button" id="removeFile" style="background:none; border:none; color:var(--accent-color); cursor:pointer;"><i class="ph ph-trash"></i></button>
+                </div>
+
+                <div class="form-group">
+                    <label for="trackTitle">Track Title</label>
+                    <input type="text" id="trackTitle" class="glass-input" placeholder="Enter track title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="artistName">Artist Name</label>
+                    <input type="text" id="artistName" class="glass-input" placeholder="Your artist/producer name" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div class="form-group">
+                        <label for="genre">Genre</label>
+                        <select id="genre" class="glass-select" required>
+                            <option value="" disabled selected>Select genre</option>
+                            <option value="pop">Pop</option>
+                            <option value="hiphop">Hip Hop</option>
+                            <option value="electronic">Electronic</option>
+                            <option value="rock">Rock</option>
+                            <option value="rnb">R&B</option>
+                            <option value="jazz">Jazz</option>
+                            <option value="classical">Classical</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="trackType">Type</label>
+                        <select id="trackType" class="glass-select" required>
+                            <option value="" disabled selected>Select type</option>
+                            <option value="instrumental">Instrumental</option>
+                            <option value="full">Full Composition</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Ownership Indicator</label>
+                    <p style="font-size:0.85rem; color:var(--text-secondary); background:rgba(16, 185, 129, 0.1); padding:12px; border-radius:var(--radius-sm); border:1px solid rgba(16, 185, 129, 0.2);">
+                        <i class="ph-fill ph-shield-check" style="color:var(--success); margin-right:4px;"></i> 
+                        Timestamp validation will be automatically recorded upon upload as proof of ownership.
+                    </p>
+                </div>
+
+                <button type="submit" class="btn-primary" id="submitBtn">
+                    Upload Track
+                </button>
+                <div id="uploadStatus" style="margin-top:16px; text-align:center; font-size:0.9rem; display:none;"></div>
+            </form>
+        </div>
+    </main>
+
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/upload.js"></script>
+</body>
+</html>
