@@ -1,6 +1,5 @@
-# Project Proposal: SonicScout - Next-Gen Independent Music Discovery
+# Project Proposal: SYMPHONY - Next-Gen Independent Music Discovery
 
-*Prepared for the Technical Club Recruitment Task*
 
 ---
 
